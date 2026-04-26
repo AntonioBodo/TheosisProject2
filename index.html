@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theosis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:            #C9A84C;
+  --gold-light:      #E8C97A;
+  --gold-dark:       #8B6914;
+  --deep:            #0D0A05;
+  --parchment:       #F5EDD8;
+  --parchment-dim:   rgba(245,237,216,0.72);
+  --parchment-muted: rgba(245,237,216,0.45);
+  --border:          rgba(201,168,76,0.25);
+  --border-hover:    rgba(201,168,76,0.65);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--deep); color:var(--parchment);
+  font-family:'Crimson Pro',Georgia,serif; min-height:100vh;
+  overflow-x:hidden; line-height:1.7;
+}
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.45;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+}
+
+/* Pages */
+.page { display:none; position:relative; z-index:1; }
+.page.active { display:block; animation:fadeIn .45s ease both; }
+.container { max-width:860px; margin:0 auto; padding:0 28px 80px; }
+
+/* Cross */
+.cross-svg {
+  width:54px; height:86px; opacity:.9;
+  filter:drop-shadow(0 0 10px rgba(201,168,76,.4));
+  animation:glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100%{ filter:drop-shadow(0 0 8px  rgba(201,168,76,.3)); }
+  50%    { filter:drop-shadow(0 0 20px rgba(201,168,76,.65)); }
+}
+
+/* Ornament */
+.ornament { display:flex; align-items:center; gap:14px; margin:26px auto; max-width:420px; }
+.ornament-line { flex:1; height:1px; background:linear-gradient(to right,transparent,var(--gold-dark),transparent); }
+.ornament-dot  { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); box-shadow:0 0 6px rgba(201,168,76,.5); flex-shrink:0; }
+
+/* Back btn */
+.back-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.2em;
+  color:var(--gold-dark); text-transform:uppercase; cursor:pointer;
+  border:none; background:none; padding:4px 0; margin-bottom:28px;
+  transition:color .25s;
+}
+.back-btn:hover { color:var(--gold); }
+.back-btn svg { width:16px; height:16px; }
+
+/* Section header */
+.section-header { text-align:center; padding:48px 0 14px; }
+.page-title {
+  font-family:'Cinzel',serif; font-size:clamp(1.5rem,4vw,2.4rem);
+  font-weight:700; letter-spacing:.13em; color:var(--gold);
+  text-shadow:0 0 30px rgba(201,168,76,.28), 0 2px 0 rgba(0,0,0,.5); line-height:1.1;
+}
+.page-desc {
+  margin-top:10px; font-style:italic; font-size:1.02rem; font-weight:300;
+  color:var(--parchment-muted); letter-spacing:.02em;
+}
+
+/* ── HOME ── */
+.home-header { text-align:center; padding:58px 0 28px; }
+.logo-wrap {
+  display:inline-flex; flex-direction:column; align-items:center; gap:10px;
+  animation:fadeDown .9s ease both;
+}
+.site-title {
+  font-family:'Cinzel',serif; font-size:clamp(2.8rem,7vw,4.8rem);
+  font-weight:900; letter-spacing:.18em; color:var(--gold); line-height:1;
+  text-shadow:0 0 40px rgba(201,168,76,.35), 0 2px 0 rgba(0,0,0,.6);
+}
+.site-subtitle {
+  font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.35em;
+  color:var(--gold-dark); text-transform:uppercase; margin-top:4px;
+}
+.scripture { text-align:center; margin-bottom:44px; animation:fadeIn 1.5s ease both; }
+.scripture-verse { font-style:italic; font-size:clamp(1.05rem,2.5vw,1.28rem); font-weight:300; color:var(--parchment); opacity:.88; line-height:1.6; }
+.scripture-ref { font-family:'Cinzel',serif; font-size:.75rem; letter-spacing:.22em; color:var(--gold); margin-top:8px; opacity:.82; }
+
+/* Nav cards */
+.nav-grid { display:flex; flex-direction:column; gap:13px; }
+.nav-card {
+  position:relative; display:flex; align-items:center; justify-content:center;
+  padding:22px 32px; cursor:pointer; overflow:hidden;
+  border:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(201,168,76,.04) 0%,rgba(201,168,76,.01) 100%);
+  transition:border-color .3s, background .3s, transform .2s;
+  animation:fadeUp .55s ease both;
+}
+.nav-card:nth-child(1){animation-delay:.08s}
+.nav-card:nth-child(2){animation-delay:.16s}
+.nav-card:nth-child(3){animation-delay:.24s}
+.nav-card:nth-child(4){animation-delay:.32s}
+.nav-card:nth-child(5){animation-delay:.40s}
+.nav-card::before,.nav-card::after {
+  content:''; position:absolute; width:13px; height:13px;
+  border-color:var(--gold); border-style:solid; opacity:.4;
+  transition:opacity .3s, width .3s, height .3s;
+}
+.nav-card::before { top:5px; left:5px; border-width:1px 0 0 1px; }
+.nav-card::after  { bottom:5px; right:5px; border-width:0 1px 1px 0; }
+.nav-card .shimmer {
+  position:absolute; inset:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(201,168,76,.07) 50%,transparent 70%);
+  transform:translateX(-110%); transition:transform .65s ease;
+}
+.nav-card:hover { border-color:var(--border-hover); background:linear-gradient(135deg,rgba(201,168,76,.09) 0%,rgba(201,168,76,.03) 100%); transform:translateY(-1px); }
+.nav-card:hover::before,.nav-card:hover::after { opacity:1; width:18px; height:18px; }
+.nav-card:hover .shimmer { transform:translateX(110%); }
+.nav-card-label {
+  font-family:'Cinzel',serif; font-size:clamp(.8rem,2vw,.95rem);
+  font-weight:600; letter-spacing:.18em; color:var(--gold);
+  text-transform:uppercase; position:relative; z-index:1;
+  transition:color .25s, text-shadow .25s;
+}
+.nav-card:hover .nav-card-label { color:var(--gold-light); text-shadow:0 0 16px rgba(232,201,122,.4); }
+
+/* ── ENTRY CARDS (Writings, Life, Akathists) ── */
+.entry-list { display:flex; flex-direction:column; gap:14px; margin-top:6px; }
+.entry-card {
+  position:relative; overflow:hidden;
+  border:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(201,168,76,.03) 0%,transparent 100%);
+  padding:26px 30px 24px; cursor:pointer;
+  transition:border-color .3s, background .3s, transform .2s;
+  animation:fadeUp .5s ease both;
+}
+.entry-card:hover { border-color:var(--border-hover); background:linear-gradient(135deg,rgba(201,168,76,.08) 0%,transparent 100%); transform:translateX(3px); }
+.entry-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--gold-dark); opacity:0; transition:opacity .3s;
+}
+.entry-card:hover::before { opacity:1; }
+.entry-card .shimmer {
+  position:absolute; inset:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(201,168,76,.05) 50%,transparent 70%);
+  transform:translateX(-110%); transition:transform .7s ease;
+}
+.entry-card:hover .shimmer { transform:translateX(110%); }
+.entry-num  { font-family:'Cinzel',serif; font-size:.63rem; letter-spacing:.3em; color:var(--gold-dark); margin-bottom:7px; }
+.entry-title { font-family:'Cinzel',serif; font-size:clamp(.92rem,2.2vw,1.1rem); font-weight:600; letter-spacing:.07em; color:var(--gold); line-height:1.3; margin-bottom:5px; position:relative; z-index:1; }
+.entry-author { font-style:italic; font-size:.9rem; font-weight:300; color:var(--parchment-muted); margin-bottom:9px; }
+.entry-excerpt { font-size:.97rem; font-weight:300; color:var(--parchment-dim); line-height:1.65; position:relative; z-index:1; }
+.entry-tag { display:inline-block; margin-top:11px; font-family:'Cinzel',serif; font-size:.59rem; letter-spacing:.22em; color:var(--gold-dark); border:1px solid rgba(201,168,76,.3); padding:3px 10px; text-transform:uppercase; }
+
+/* ── QUOTE CARDS ── */
+.quote-list { display:flex; flex-direction:column; gap:18px; margin-top:6px; }
+.quote-card {
+  position:relative; overflow:hidden;
+  border:1px solid var(--border); border-left:3px solid var(--gold-dark);
+  background:linear-gradient(135deg,rgba(201,168,76,.03) 0%,transparent 100%);
+  padding:28px 34px 26px 34px;
+  transition:border-color .3s, background .3s;
+  animation:fadeUp .5s ease both;
+}
+.quote-card:hover { border-color:var(--border-hover); border-left-color:var(--gold); background:linear-gradient(135deg,rgba(201,168,76,.07) 0%,transparent 100%); }
+.quote-mark { font-family:'Cinzel',serif; font-size:3.2rem; line-height:.65; color:var(--gold-dark); opacity:.5; margin-bottom:4px; display:block; }
+.quote-text { font-style:italic; font-size:clamp(1rem,2.3vw,1.16rem); font-weight:300; color:var(--parchment); line-height:1.78; letter-spacing:.01em; }
+.quote-attribution { margin-top:15px; display:flex; align-items:center; gap:12px; }
+.quote-line { height:1px; background:var(--border); width:36px; flex-shrink:0; }
+.quote-author { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.2em; color:var(--gold); text-transform:uppercase; }
+.quote-source { font-size:.8rem; font-style:italic; color:var(--parchment-muted); margin-top:3px; }
+
+/* ── SAINTS GRID ── */
+.saints-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:15px; margin-top:6px;
+}
+.saint-card {
+  position:relative; overflow:hidden;
+  border:1px solid var(--border);
+  background:linear-gradient(160deg,rgba(201,168,76,.05) 0%,transparent 60%);
+  padding:26px 22px 22px; cursor:pointer;
+  transition:border-color .3s, background .3s, transform .2s;
+  animation:fadeUp .5s ease both;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+.saint-card:hover { border-color:var(--border-hover); background:linear-gradient(160deg,rgba(201,168,76,.11) 0%,transparent 60%); transform:translateY(-3px); }
+.saint-icon { width:50px; height:50px; margin-bottom:14px; opacity:.75; }
+.saint-name { font-family:'Cinzel',serif; font-size:.93rem; font-weight:600; letter-spacing:.1em; color:var(--gold); line-height:1.3; margin-bottom:5px; }
+.saint-feast { font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.22em; color:var(--gold-dark); text-transform:uppercase; margin-bottom:9px; }
+.saint-desc { font-size:.88rem; font-weight:300; font-style:italic; color:var(--parchment-muted); line-height:1.6; }
+
+/* ── READING VIEW ── */
+.reading-view { display:none; }
+.reading-view.active { display:block; animation:fadeIn .4s ease both; }
+.list-view.hidden { display:none; }
+
+.reading-header { text-align:center; padding:16px 0 14px; }
+.reading-title {
+  font-family:'Cinzel',serif; font-size:clamp(1.3rem,3.5vw,1.9rem);
+  font-weight:700; letter-spacing:.09em; color:var(--gold); line-height:1.2;
+}
+.reading-meta { margin-top:9px; font-style:italic; font-size:.98rem; font-weight:300; color:var(--parchment-muted); }
+.reading-body {
+  max-width:650px; margin:0 auto;
+  font-size:clamp(1rem,2vw,1.11rem); font-weight:300;
+  color:var(--parchment-dim); line-height:1.9; letter-spacing:.01em;
+}
+.reading-body p { margin-bottom:1.4em; }
+.reading-body h3 {
+  font-family:'Cinzel',serif; font-size:.96rem; letter-spacing:.18em;
+  color:var(--gold); font-weight:600; margin:2em 0 .75em; text-transform:uppercase;
+}
+.reading-body blockquote {
+  border-left:2px solid var(--gold-dark); padding:10px 0 10px 20px;
+  margin:1.5em 0; font-style:italic; color:var(--parchment-muted);
+}
+.placeholder-note {
+  border:1px dashed rgba(201,168,76,.3); padding:20px 26px; text-align:center;
+  font-style:italic; color:var(--parchment-muted); font-size:.93rem; margin-bottom:1.4em;
+}
+
+/* Footer */
+.site-footer {
+  text-align:center; padding-top:50px; padding-bottom:8px;
+  border-top:1px solid rgba(201,168,76,.1); margin-top:40px;
+}
+.footer-cross { font-size:1.1rem; color:var(--gold-dark); letter-spacing:.4em; opacity:.4; margin-bottom:18px; }
+.footer-github {
+  display:inline-flex; align-items:center; gap:9px;
+  font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.2em;
+  color:var(--gold-dark); text-decoration:none; text-transform:uppercase;
+  transition:color .25s, gap .25s;
+}
+.footer-github:hover { color:var(--gold); gap:13px; }
+.footer-github svg { width:16px; height:16px; opacity:.7; flex-shrink:0; transition:opacity .25s; }
+.footer-github:hover svg { opacity:1; }
+.footer-copy {
+  margin-top:12px; font-size:.72rem; font-style:italic;
+  color:var(--parchment-muted); opacity:.5; letter-spacing:.04em;
+}
+
+/* Keyframes */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     HOME
+════════════════════════════════════════ -->
+<div class="page active" id="home">
+<div class="container">
+  <header class="home-header">
+    <div class="logo-wrap">
+      <svg class="cross-svg" viewBox="0 0 60 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="27" y="0" width="6" height="96" rx="1" fill="#C9A84C"/>
+        <rect x="16" y="10" width="28" height="5" rx="1" fill="#C9A84C"/>
+        <rect x="4" y="30" width="52" height="6" rx="1" fill="#C9A84C"/>
+        <line x1="10" y1="68" x2="50" y2="80" stroke="#C9A84C" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="site-title">THEOSIS</div>
+      <div class="site-subtitle">Orthodox Christian Library</div>
+    </div>
+  </header>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+  <div class="scripture">
+    <p class="scripture-verse">"I and the Father are one"</p>
+    <p class="scripture-ref">John 10 : 30</p>
+  </div>
+  <nav class="nav-grid">
+    <div class="nav-card" onclick="navigate('writings')"><div class="shimmer"></div><span class="nav-card-label">Church Fathers Writings</span></div>
+    <div class="nav-card" onclick="navigate('life')"><div class="shimmer"></div><span class="nav-card-label">Church Fathers &amp; Their Life</span></div>
+    <div class="nav-card" onclick="navigate('quotes')"><div class="shimmer"></div><span class="nav-card-label">Church Fathers Quotes</span></div>
+    <div class="nav-card" onclick="navigate('saints')"><div class="shimmer"></div><span class="nav-card-label">Saints</span></div>
+    <div class="nav-card" onclick="navigate('akathists')"><div class="shimmer"></div><span class="nav-card-label">Akathists</span></div>
+  </nav>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHURCH FATHERS WRITINGS
+════════════════════════════════════════ -->
+<div class="page" id="writings">
+<div class="container">
+  <button class="back-btn" onclick="navigate('home')">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Library
+  </button>
+  <div class="section-header">
+    <div class="page-title">Church Fathers Writings</div>
+    <div class="page-desc">Sacred texts and theological works of the Holy Fathers of the Church</div>
+  </div>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+
+  <!-- LIST -->
+  <div class="list-view" id="writings-list">
+    <div class="entry-list">
+      <div class="entry-card" onclick="openReading('writings')" style="animation-delay:.05s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Writing · I</div>
+        <div class="entry-title">Title of Writing — Add Your Title Here</div>
+        <div class="entry-author">by Church Father Name · Century</div>
+        <div class="entry-excerpt">Add a short description or excerpt of this writing here. This helps the reader know what they are about to read before opening the full text.</div>
+        <span class="entry-tag">Theology</span>
+      </div>
+      <div class="entry-card" onclick="openReading('writings')" style="animation-delay:.12s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Writing · II</div>
+        <div class="entry-title">Title of Writing — Add Your Title Here</div>
+        <div class="entry-author">by Church Father Name · Century</div>
+        <div class="entry-excerpt">Add a short description or excerpt of this writing here. This helps the reader know what they are about to read before opening the full text.</div>
+        <span class="entry-tag">Asceticism</span>
+      </div>
+      <div class="entry-card" onclick="openReading('writings')" style="animation-delay:.19s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Writing · III</div>
+        <div class="entry-title">Title of Writing — Add Your Title Here</div>
+        <div class="entry-author">by Church Father Name · Century</div>
+        <div class="entry-excerpt">Add a short description or excerpt of this writing here. This helps the reader know what they are about to read before opening the full text.</div>
+        <span class="entry-tag">Prayer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="reading-view" id="writings-reading">
+    <button class="back-btn" onclick="closeReading('writings')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Writings
+    </button>
+    <div class="reading-header">
+      <div class="reading-title">Title of the Writing</div>
+      <div class="reading-meta">by Church Father Name &nbsp;·&nbsp; Century &nbsp;·&nbsp; Category</div>
+    </div>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <div class="reading-body">
+      <div class="placeholder-note">✦ &nbsp; Replace this with your introduction paragraph &nbsp; ✦</div>
+      <p>Your introductory paragraph goes here. This is where you place the opening of the text, translated or transcribed. The font and spacing are chosen for comfortable long-form reading.</p>
+      <h3>Chapter One — Your Chapter Title</h3>
+      <p>Begin the body of the chapter here. Each paragraph is separated with generous spacing to ease reading. Add as many paragraphs as needed simply by copying a &lt;p&gt; block.</p>
+      <p>Continue the chapter text here. A second paragraph within the same chapter flows naturally.</p>
+      <blockquote>Use this style to highlight an important or memorable passage within the text.</blockquote>
+      <h3>Chapter Two — Your Chapter Title</h3>
+      <p>Start the second chapter here. Repeat the heading and paragraph pattern for each new section. Add or remove chapters freely.</p>
+      <p>Continue writing here as needed.</p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHURCH FATHERS & THEIR LIFE
+════════════════════════════════════════ -->
+<div class="page" id="life">
+<div class="container">
+  <button class="back-btn" onclick="navigate('home')">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Library
+  </button>
+  <div class="section-header">
+    <div class="page-title">Church Fathers &amp; Their Life</div>
+    <div class="page-desc">Lives, biographies and historical accounts of the Holy Fathers</div>
+  </div>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+
+  <div class="list-view" id="life-list">
+    <div class="entry-list">
+      <div class="entry-card" onclick="openReading('life')" style="animation-delay:.05s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Father · I</div>
+        <div class="entry-title">Name of the Church Father</div>
+        <div class="entry-author">c. Birth Year – Death Year &nbsp;·&nbsp; Region / Tradition</div>
+        <div class="entry-excerpt">A short biographical summary — his major contributions, the era he lived in, and what he is best remembered for. Replace this with your own text.</div>
+        <span class="entry-tag">Bishop</span>
+      </div>
+      <div class="entry-card" onclick="openReading('life')" style="animation-delay:.12s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Father · II</div>
+        <div class="entry-title">Name of the Church Father</div>
+        <div class="entry-author">c. Birth Year – Death Year &nbsp;·&nbsp; Region / Tradition</div>
+        <div class="entry-excerpt">A short biographical summary — his major contributions, the era he lived in, and what he is best remembered for. Replace this with your own text.</div>
+        <span class="entry-tag">Desert Father</span>
+      </div>
+      <div class="entry-card" onclick="openReading('life')" style="animation-delay:.19s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Father · III</div>
+        <div class="entry-title">Name of the Church Father</div>
+        <div class="entry-author">c. Birth Year – Death Year &nbsp;·&nbsp; Region / Tradition</div>
+        <div class="entry-excerpt">A short biographical summary — his major contributions, the era he lived in, and what he is best remembered for. Replace this with your own text.</div>
+        <span class="entry-tag">Theologian</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reading-view" id="life-reading">
+    <button class="back-btn" onclick="closeReading('life')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Lives
+    </button>
+    <div class="reading-header">
+      <div class="reading-title">Name of the Church Father</div>
+      <div class="reading-meta">c. Birth – Death &nbsp;·&nbsp; Region &nbsp;·&nbsp; Title / Role</div>
+    </div>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <div class="reading-body">
+      <div class="placeholder-note">✦ &nbsp; Replace this with an introductory paragraph about this Father &nbsp; ✦</div>
+      <h3>Early Life</h3>
+      <p>Describe his birth, family background, education, and early signs of holiness here. Replace this placeholder with your actual content.</p>
+      <h3>Ministry &amp; Works</h3>
+      <p>Describe his ministry, major writings, theological contributions, and the councils or events he was involved in.</p>
+      <blockquote>A notable quote or significant moment from his life can go here.</blockquote>
+      <h3>Legacy</h3>
+      <p>Summarise his lasting influence on the Church, his feast day, and how he is venerated today.</p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHURCH FATHERS QUOTES
+════════════════════════════════════════ -->
+<div class="page" id="quotes">
+<div class="container">
+  <button class="back-btn" onclick="navigate('home')">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Library
+  </button>
+  <div class="section-header">
+    <div class="page-title">Church Fathers Quotes</div>
+    <div class="page-desc">Words of wisdom, faith and theology from the Fathers of the Church</div>
+  </div>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+
+  <div class="quote-list">
+    <div class="quote-card" style="animation-delay:.05s">
+      <span class="quote-mark">"</span>
+      <div class="quote-text">Replace this with the actual quote from the Church Father. The layout is designed to let the words breathe and be read with reverence and stillness.</div>
+      <div class="quote-attribution">
+        <div class="quote-line"></div>
+        <div><div class="quote-author">Church Father Name</div><div class="quote-source">Source / Work, Chapter</div></div>
+      </div>
+    </div>
+    <div class="quote-card" style="animation-delay:.11s">
+      <span class="quote-mark">"</span>
+      <div class="quote-text">Replace this with the actual quote. You can add as many quote cards as you like by duplicating this block of HTML.</div>
+      <div class="quote-attribution">
+        <div class="quote-line"></div>
+        <div><div class="quote-author">Church Father Name</div><div class="quote-source">Source / Work, Chapter</div></div>
+      </div>
+    </div>
+    <div class="quote-card" style="animation-delay:.17s">
+      <span class="quote-mark">"</span>
+      <div class="quote-text">Replace this with the actual quote. Longer quotes naturally expand the card — the layout handles them gracefully without breaking.</div>
+      <div class="quote-attribution">
+        <div class="quote-line"></div>
+        <div><div class="quote-author">Church Father Name</div><div class="quote-source">Source / Work, Chapter</div></div>
+      </div>
+    </div>
+    <div class="quote-card" style="animation-delay:.23s">
+      <span class="quote-mark">"</span>
+      <div class="quote-text">Replace this with the actual quote. Add or remove cards freely — each one is self-contained.</div>
+      <div class="quote-attribution">
+        <div class="quote-line"></div>
+        <div><div class="quote-author">Church Father Name</div><div class="quote-source">Source / Work, Chapter</div></div>
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SAINTS
+════════════════════════════════════════ -->
+<div class="page" id="saints">
+<div class="container">
+  <button class="back-btn" onclick="navigate('home')">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Library
+  </button>
+  <div class="section-header">
+    <div class="page-title">Saints</div>
+    <div class="page-desc">Lives of the Holy Men and Women glorified by the Church</div>
+  </div>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+
+  <div class="list-view" id="saints-list">
+    <div class="saints-grid">
+      <div class="saint-card" onclick="openReading('saints')" style="animation-delay:.05s">
+        <svg class="saint-icon" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="23" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
+          <circle cx="26" cy="26" r="17" stroke="#C9A84C" stroke-width=".5" opacity=".25"/>
+          <circle cx="26" cy="19" r="8" stroke="#C9A84C" stroke-width="1" opacity=".5"/>
+          <path d="M13 43 Q26 31 39 43" stroke="#C9A84C" stroke-width="1" opacity=".5" fill="none"/>
+        </svg>
+        <div class="saint-name">Name of the Saint</div>
+        <div class="saint-feast">Feast Day · Month Day</div>
+        <div class="saint-desc">A short description — their life, calling, and why they are venerated by the Church.</div>
+      </div>
+      <div class="saint-card" onclick="openReading('saints')" style="animation-delay:.10s">
+        <svg class="saint-icon" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="23" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
+          <circle cx="26" cy="26" r="17" stroke="#C9A84C" stroke-width=".5" opacity=".25"/>
+          <circle cx="26" cy="19" r="8" stroke="#C9A84C" stroke-width="1" opacity=".5"/>
+          <path d="M13 43 Q26 31 39 43" stroke="#C9A84C" stroke-width="1" opacity=".5" fill="none"/>
+        </svg>
+        <div class="saint-name">Name of the Saint</div>
+        <div class="saint-feast">Feast Day · Month Day</div>
+        <div class="saint-desc">A short description — their life, calling, and why they are venerated by the Church.</div>
+      </div>
+      <div class="saint-card" onclick="openReading('saints')" style="animation-delay:.15s">
+        <svg class="saint-icon" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="23" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
+          <circle cx="26" cy="26" r="17" stroke="#C9A84C" stroke-width=".5" opacity=".25"/>
+          <circle cx="26" cy="19" r="8" stroke="#C9A84C" stroke-width="1" opacity=".5"/>
+          <path d="M13 43 Q26 31 39 43" stroke="#C9A84C" stroke-width="1" opacity=".5" fill="none"/>
+        </svg>
+        <div class="saint-name">Name of the Saint</div>
+        <div class="saint-feast">Feast Day · Month Day</div>
+        <div class="saint-desc">A short description — their life, calling, and why they are venerated by the Church.</div>
+      </div>
+      <div class="saint-card" onclick="openReading('saints')" style="animation-delay:.20s">
+        <svg class="saint-icon" viewBox="0 0 52 52" fill="none">
+          <circle cx="26" cy="26" r="23" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
+          <circle cx="26" cy="26" r="17" stroke="#C9A84C" stroke-width=".5" opacity=".25"/>
+          <circle cx="26" cy="19" r="8" stroke="#C9A84C" stroke-width="1" opacity=".5"/>
+          <path d="M13 43 Q26 31 39 43" stroke="#C9A84C" stroke-width="1" opacity=".5" fill="none"/>
+        </svg>
+        <div class="saint-name">Name of the Saint</div>
+        <div class="saint-feast">Feast Day · Month Day</div>
+        <div class="saint-desc">A short description — their life, calling, and why they are venerated by the Church.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reading-view" id="saints-reading">
+    <button class="back-btn" onclick="closeReading('saints')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Saints
+    </button>
+    <div class="reading-header">
+      <div class="reading-title">Name of the Saint</div>
+      <div class="reading-meta">Feast Day: Month Day &nbsp;·&nbsp; Category (Martyr / Confessor / etc.)</div>
+    </div>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <div class="reading-body">
+      <div class="placeholder-note">✦ &nbsp; Replace this with an opening paragraph about this Saint &nbsp; ✦</div>
+      <h3>Early Life</h3>
+      <p>Describe the early life of this Saint here — birthplace, family, and early signs of holiness. Replace this with your actual content.</p>
+      <h3>Path to Holiness</h3>
+      <p>Describe their calling, monastic life, miracles, martyrdom, or other aspects of their holy life here.</p>
+      <blockquote>A notable saying or prayer attributed to this Saint can go here in this blockquote style.</blockquote>
+      <h3>Glorification &amp; Veneration</h3>
+      <p>Describe their glorification, the discovery of relics, and how they are venerated today. Mention the troparion or kontakion if relevant.</p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AKATHISTS
+════════════════════════════════════════ -->
+<div class="page" id="akathists">
+<div class="container">
+  <button class="back-btn" onclick="navigate('home')">
+    <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to Library
+  </button>
+  <div class="section-header">
+    <div class="page-title">Akathists</div>
+    <div class="page-desc">Hymns of praise and veneration to the Theotokos, Christ and the Saints</div>
+  </div>
+  <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+
+  <div class="list-view" id="akathists-list">
+    <div class="entry-list">
+      <div class="entry-card" onclick="openReading('akathists')" style="animation-delay:.05s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Akathist · I</div>
+        <div class="entry-title">Akathist to — Add Title Here</div>
+        <div class="entry-author">Tradition / Origin &nbsp;·&nbsp; Century</div>
+        <div class="entry-excerpt">A brief description of this Akathist — who it is addressed to, its origin, and the occasions on which it is traditionally sung or read.</div>
+        <span class="entry-tag">Hymn</span>
+      </div>
+      <div class="entry-card" onclick="openReading('akathists')" style="animation-delay:.12s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Akathist · II</div>
+        <div class="entry-title">Akathist to — Add Title Here</div>
+        <div class="entry-author">Tradition / Origin &nbsp;·&nbsp; Century</div>
+        <div class="entry-excerpt">A brief description of this Akathist — who it is addressed to, its origin, and the occasions on which it is traditionally sung or read.</div>
+        <span class="entry-tag">Marian</span>
+      </div>
+      <div class="entry-card" onclick="openReading('akathists')" style="animation-delay:.19s">
+        <div class="shimmer"></div>
+        <div class="entry-num">Akathist · III</div>
+        <div class="entry-title">Akathist to — Add Title Here</div>
+        <div class="entry-author">Tradition / Origin &nbsp;·&nbsp; Century</div>
+        <div class="entry-excerpt">A brief description of this Akathist — who it is addressed to, its origin, and the occasions on which it is traditionally sung or read.</div>
+        <span class="entry-tag">To a Saint</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reading-view" id="akathists-reading">
+    <button class="back-btn" onclick="closeReading('akathists')">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Akathists
+    </button>
+    <div class="reading-header">
+      <div class="reading-title">Akathist to — Title Here</div>
+      <div class="reading-meta">Tradition / Origin &nbsp;·&nbsp; Century</div>
+    </div>
+    <div class="ornament"><div class="ornament-line"></div><div class="ornament-dot"></div><div class="ornament-line"></div></div>
+    <div class="reading-body">
+      <div class="placeholder-note">✦ &nbsp; Replace this with a short introduction to this Akathist &nbsp; ✦</div>
+      <h3>Kontakion I</h3>
+      <p>Place the text of Kontakion I here. The Kontakia are the short refrains sung between the Ikoi. Replace this with the actual liturgical text.</p>
+      <h3>Ikos I</h3>
+      <p>Place the text of Ikos I here. The Ikoi are the longer stanzas that alternate with the Kontakia. Each ends with the repeated refrain shown below.</p>
+      <blockquote>Rejoice — add the refrain here, repeated as it appears in the text.</blockquote>
+      <h3>Kontakion II</h3>
+      <p>Continue the pattern — Kontakion, then Ikos — repeating through all thirteen stanzas. Duplicate the heading and paragraph blocks as needed.</p>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <div class="footer-cross">✦ ✦ ✦</div>
+    <a class="footer-github" href="https://github.com/AntonioBodo" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      AntonioBodo — GitHub
+    </a>
+  </footer>
+</div>
+</div>
+
+<script>
+function navigate(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const t = document.getElementById(id);
+  if (t) { t.classList.add('active'); window.scrollTo(0,0); }
+}
+function openReading(section) {
+  document.getElementById(section+'-list').classList.add('hidden');
+  document.getElementById(section+'-reading').classList.add('active');
+  window.scrollTo(0,0);
+}
+function closeReading(section) {
+  document.getElementById(section+'-reading').classList.remove('active');
+  document.getElementById(section+'-list').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
